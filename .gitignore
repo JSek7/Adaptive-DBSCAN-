@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Large data (local only)
+data/
+Lidar ROS Bags/
+Lidar_Data/
+*.bag
+*.db3
+
+# Logs / outputs
+*.log
+outputs/
+runs/
