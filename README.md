@@ -1,103 +1,87 @@
-# Adaptive DBSCAN (LiDAR Clustering Core)
+# Adaptive DBSCAN for LiDAR Point Cloud Clustering
 
-Core implementation of an adaptive-parameter DBSCAN pipeline for LiDAR point cloud
-clustering (robotics / autonomous driving use-cases).
+A clean implementation of an **adaptive-parameter DBSCAN pipeline** designed for LiDAR-based perception systems in robotics and autonomous driving.
 
-This repository is intended to hold the reusable algorithm core (clean Python
-modules). Experimental notebooks and quick tests live in `examples/`.
+This project explores how density-based clustering can be made robust to LiDAR’s **range-dependent point density**, where traditional global-parameter DBSCAN often fails.
 
----------------------------------------------------------------------
+---
 
-OVERVIEW
+## Motivation
 
-This project focuses on density-based clustering of LiDAR point clouds using an
-adaptive variant of DBSCAN. Instead of relying on a single global epsilon (ε) and
-min_samples, parameters are adapted based on local point density and neighbourhood
-statistics.
+Standard DBSCAN uses fixed global parameters:
 
-The goal is to produce a clustering core that is:
-- robust to varying point density
-- suitable for LiDAR perception pipelines
-- easy to integrate into robotics or autonomy stacks
+- `ε` (neighbourhood radius)
+- `min_samples` (minimum core density)
 
----------------------------------------------------------------------
+However, LiDAR point clouds are **non-uniform**:
+- Point density decreases with distance
+- Beam divergence affects spatial resolution
+- 3D structure is often projected into 2D
 
-FEATURES
+A single global `ε` leads to:
+- Fragmented far-field clusters
+- Merged near-field objects
+- Sensitivity to tuning
 
-- Adaptive tuning of DBSCAN parameters (ε and/or min_samples)
-- Designed for LiDAR point clouds in 2D or 3D
-- Compatible with typical preprocessing steps (voxelisation, ground removal)
-- Intended to be GPU-friendly (PyTorch-based implementation planned)
+This project investigates **adaptive ε and min_samples strategies** that scale with local geometry or density statistics.
 
----------------------------------------------------------------------
+---
 
-REPOSITORY STRUCTURE
+## High-Level Pipeline
 
+Typical LiDAR obstacle clustering flow:
+
+1. Region-of-interest filtering (optional)
+2. Voxel grid downsampling
+3. Ground removal (e.g., RANSAC plane fitting)
+4. Adaptive DBSCAN clustering
+5. Post-processing (centroids, bounding boxes, filtering)
+
+---
+
+## Repository Structure
 adaptive-dbscan-core/
-  adaptive_dbscan/
-    __init__.py
-    core.py            # adaptive DBSCAN implementation (WIP)
-    adaptive_eps.py    # adaptive epsilon logic (WIP)
-    utils.py           # helper functions (WIP)
+│
+├── notebooks/ # Experimental notebooks and visualisations
+├── scripts/ # Runnable pipeline entrypoints
+├── src/ # Reusable implementation modules (in progress)
+├── README.md
+├── LICENSE
+└── .gitignore
 
-  examples/
-    dbscan-test.ipynb
-    test.ipynb
 
-  README.md
+Large ROS bag files and raw LiDAR datasets are intentionally **not tracked in Git**.
 
----------------------------------------------------------------------
+---
 
-INSTALLATION / CLONE
+## Current Status
 
-Clone the repository locally:
+Implemented / explored:
 
-git clone https://github.com/JSek7/Adaptive-DBSCAN-.git
-cd Adaptive-DBSCAN-
+- DBSCAN clustering in 2D projected LiDAR frames
+- Adaptive epsilon scaling experiments
+- Cluster visualisation with bounding boxes
+- RANSAC ground segmentation experiments
+- Voxel downsampling utilities
 
-Note: the repository name may be renamed later to `adaptive-dbscan-core`. GitHub
-will automatically redirect old links.
+In progress:
 
----------------------------------------------------------------------
+- Extraction of clean core modules into `src/`
+- Formal adaptive parameter strategies
+- GPU-friendly PyTorch implementation
+- Synthetic benchmarking
+- Unit tests
 
-PLANNED USAGE API
+---
 
-Example of the intended interface (subject to change as the implementation is
-extracted from notebooks):
+## Example Usage (Planned API)
 
+```python
 from adaptive_dbscan.core import adaptive_dbscan
 
 labels = adaptive_dbscan(
-    points,                   # shape (N, 2) or (N, 3)
-    device="cuda",            # "cpu" or "cuda"
-    eps_mode="adaptive",      # "adaptive" or "fixed"
-    min_samples_mode="adaptive"
+    points,                    # shape (N,2) or (N,3)
+    eps_mode="adaptive",
+    min_samples_mode="adaptive",
+    device="cuda"
 )
-
----------------------------------------------------------------------
-
-RECOMMENDED LIDAR PIPELINE
-
-Typical flow for LiDAR obstacle clustering:
-
-1. Optional ROI crop or range filtering
-2. Voxel grid downsampling
-3. Ground removal (RANSAC plane segmentation)
-4. Adaptive DBSCAN on non-ground points
-
----------------------------------------------------------------------
-
-ROADMAP
-
-- Extract core DBSCAN logic from notebooks into adaptive_dbscan/core.py
-- Implement adaptive epsilon and min_samples strategies
-- Add synthetic unit tests and simple benchmarks
-- Add example on a real LiDAR frame
-- Document integration into a perception pipeline
-- Add optional ground removal utilities
-
----------------------------------------------------------------------
-
-LICENSE
-
-MIT license 
