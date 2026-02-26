@@ -40,19 +40,20 @@ Typical LiDAR obstacle clustering flow:
 ---
 
 ## Repository Structure
+
+```
 adaptive-dbscan-core/
 │
-├── notebooks/ # Experimental notebooks and visualisations
-├── scripts/ # Runnable pipeline entrypoints
-├── src/ # Reusable implementation modules (in progress)
+├── notebooks/        # Experimental notebooks and visualisations
+├── scripts/          # Runnable pipeline entrypoints
+├── src/              # Reusable implementation modules (in progress)
 ├── README.md
 ├── LICENSE
 └── .gitignore
-
+```
 
 Large ROS bag files and raw LiDAR datasets are intentionally **not tracked in Git**.
 
----
 
 ## Current Status
 
