@@ -64,14 +64,21 @@ Implemented / explored:
 - Cluster visualisation with bounding boxes
 - RANSAC ground segmentation experiments
 - Voxel downsampling utilities
+- (Data Extractor for converting RosBags into .npy files)
 
 In progress:
 
 - Extraction of clean core modules into `src/`
-- Formal adaptive parameter strategies
-- GPU-friendly PyTorch implementation
 - Synthetic benchmarking
 - Unit tests
+
+## Plans / Future Work
+
+- **World Model (Occupancy Grid):** Maintain a 2D occupancy grid over the ground plane (or 3D voxel grid if needed). Each cell stores an occupancy probability representing belief that the region contains an obstacle.
+
+- **Bayesian Filter Updates (Log-Odds):** Fuse LiDAR evidence across time using a recursive Bayesian update (log-odds form) with an inverse sensor model for "hit" and "free space" along each beam.
+
+- **Cluster on Aggregated Evidence:** Threshold or sample occupied cells to produce a consolidated point set, then apply DBSCAN to recover consistent object clusters from the map rather than from a single frame.on that 
 
 ---
 
